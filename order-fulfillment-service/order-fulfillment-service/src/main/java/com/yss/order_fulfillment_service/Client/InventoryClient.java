@@ -1,4 +1,4 @@
-package com.yss.order_fulfillment_service.Client;
+package com.yss.order_fulfillment_service.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

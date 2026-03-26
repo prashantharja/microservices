@@ -1,4 +1,4 @@
-package com.yss.inventory_service.Controller;
+package com.yss.inventory_service.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
