@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yss.order_fulfillment_service.client.InventoryClient;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
 @RequestMapping("/orders")
 public class Status {
@@ -19,10 +21,19 @@ public class Status {
 
 	// Endpoint 1: Synchronous read using OpenFeign
 	@GetMapping("/status")
+	@CircuitBreaker(name = "inventory", fallbackMethod = "inventoryFallback")
 	public String getStatus() {
 
 		String inventoryResponse = inventoryClient.checkStock();
 		return "Order Fulfillment Service status is : up and " + "running! -> " + inventoryResponse;
+	}
+
+	// The signature must match the original method, but take an Exception parameter
+	public String inventoryFallback(Exception e) {
+		System.out.println("CIRCUIT BREAKER TRIGGERED: " + "Inventory Service is unreachable!");
+		return "Order Fulfillment Service status is : up and running! -> "
+				+ "[FALLBACK: Inventory Service is currently offline. "
+				+ "Showing cached catalog data.]";
 	}
 
 	// --- ASYNCHRONOUS DEPENDENCY (Kafka) ---
